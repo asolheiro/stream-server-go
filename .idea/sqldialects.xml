@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/authServer/internal/repository/KeysRepository.go" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/scripts/01_init.sql" dialect="H2" />
+    <file url="file://$PROJECT_DIR$/scripts/02_stream_keys_populate.sql" dialect="GenericSQL" />
+  </component>
+</project>

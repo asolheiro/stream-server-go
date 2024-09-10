@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS lives (
+    name        VARCHAR(255) NOT NULL,
+    stream_key  VARCHAR(255) NOT NULL PRIMARY KEY
+);

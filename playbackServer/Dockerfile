@@ -1,26 +1,26 @@
 FROM golang:1.23 AS builder
 LABEL authors="asolheiro"
 
-WORKDIR /app-auth
+WORKDIR /app-playback
 
 COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 \
     go build \
     -a -installsuffix cgo \
-    -o stream-key-manager \
+    -o playback-server \
     ./cmd/main.go
 
-RUN chmod +x ./stream-key-manager
+RUN chmod +x ./playback-server
 
 FROM alpine:latest
 
-WORKDIR /app-auth
+WORKDIR /app
 
-COPY --from=builder /app-auth/stream-key-manager ./
+COPY --from=builder /app-playback/playback-server ./
 
 RUN apk update && apk add curl
 
-EXPOSE 8000
+EXPOSE 8001
 
-ENTRYPOINT ["./stream-key-manager"]
+ENTRYPOINT ["./playback-server"]

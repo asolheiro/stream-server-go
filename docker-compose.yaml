@@ -1,6 +1,6 @@
 include:
-  - path:
-    - ./authServer/docker-compose-auth-server.yaml
+  - ./authServer/docker-compose.auth-server.yaml
+  - ./playbackServer/docker-compose.playback-server.yaml
 services:
   nginx:
     image: tiangolo/nginx-rtmp:latest
@@ -10,5 +10,25 @@ services:
     ports:
       - "1935:1935"
       - "8081:8081"
+    depends_on:
+      auth-server:
+        condition: service_healthy
+  postgres:
+    image: postgres
+    restart: always
+    hostname: postgres
+    environment:
+      POSTGRES_PASSWORD: "password"
+      POSTGRES_DB: "streamkeys"
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./scripts/:/docker-entrypoint-initdb.d/
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U postgres" ]
+      interval: 5s
+      timeout: 10s
+      retries: 3
+      start_period: 10s
 volumes:
   stream-volumes:
