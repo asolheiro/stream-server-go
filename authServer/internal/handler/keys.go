@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"github.com/labstack/echo"
 	"github.com/rmndvngrpslhr/stream-server-go/authServer/internal/model"
 	"github.com/rmndvngrpslhr/stream-server-go/authServer/internal/service"
@@ -28,6 +29,7 @@ func (kh *keysHandler) AuthStreaming(context echo.Context) error {
 	body := context.Request().Body
 
 	fields, _ := io.ReadAll(body)
+	log.Default().Println("Auth...\n", string(fields))
 
 	givenKeyValues := getStreamKeys(fields)
 	keys, err := kh.keysService.AuthStreamingKey(givenKeyValues.Name, givenKeyValues.KeyUUID)
@@ -35,11 +37,14 @@ func (kh *keysHandler) AuthStreaming(context echo.Context) error {
 		return context.String(http.StatusBadRequest, err.Error())
 	}
 
-	if keys.KeyUUID != "" {
-		log.Default().Println("user authenticated")
-		return context.String(http.StatusOK, "OK")
+	if keys.KeyUUID == "" {
+		return context.String(http.StatusForbidden, "user not authenticated")
 	}
-	return context.String(http.StatusForbidden, "user not authenticated")
+
+	log.Default().Println("user authenticated")
+	newStreamURL := fmt.Sprintf("rtmp:127.0.0.1:1935/hls-live/%s", keys.Name)
+	log.Default().Println("Redirecting to: ", newStreamURL)
+	return context.Redirect(http.StatusFound, newStreamURL)
 }
 
 func getStreamKeys(s []byte) model.Keys {

@@ -14,7 +14,6 @@ func main() {
 	if err != nil {
 		log.Fatal("error connecting to database, err: ", err.Error())
 	}
-	defer log.Default().Println(dbConn.Close())
 
 	// Init App
 	keysRepo := repository.NewKeysRepository(dbConn)

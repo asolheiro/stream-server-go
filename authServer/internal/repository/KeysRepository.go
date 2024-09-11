@@ -23,7 +23,7 @@ func NewKeysRepository(db *sql.DB) KeysRepository {
 var ErrQuery = errors.New("error finding stream key")
 
 func (kr *keysRepository) FindStreamKey(name, key string) (*model.Keys, error) {
-	fmt.Println(": ======================: looking for: ", name, key)
+	fmt.Println(": ======================: looking for: \n", name, key)
 	keys := &model.Keys{}
 	row := kr.DB.QueryRow(
 		`SELECT * FROM "lives" WHERE "name"=$1 AND "stream_key"=$2`,

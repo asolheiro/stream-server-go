@@ -5,6 +5,7 @@ services:
       context: .
     ports:
       - "8000:8000"
+    hostname: auth-server
     depends_on:
       postgres:
           condition: service_healthy
